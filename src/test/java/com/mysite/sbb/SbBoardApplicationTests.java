@@ -3,6 +3,7 @@ package com.mysite.sbb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.mysite.sbb.answer.Answer;
+import com.mysite.sbb.answer.AnswerRepository;
+import com.mysite.sbb.question.Question;
+import com.mysite.sbb.question.QuestionRepository;
 
 // 스프링부트 테스트 클래스 의미
 @SpringBootTest
@@ -32,7 +38,7 @@ class SbBoardApplicationTests {
 	@Rollback(false) // 트랜잭션 롤백을 하지 않도록 설정
 	void testJpa() {
 		/*
-		// 질문 데이터 추가
+		// 1-1. 질문 데이터 추가
 		Question q1 = new Question();
 		q1.setSubject("sbb가 무엇인가요?");
 		q1.setContent("sbb에 대해서 알고 싶습니다.");
@@ -46,7 +52,7 @@ class SbBoardApplicationTests {
 		q2.setCreateDate(LocalDateTime.now());
 		this.questionRepository.save(q2); // 2번째 행 저장
 		
-		// 질문 데이터 검색
+		// 1-2. 질문 데이터 조회
 		List<Question> all = this.questionRepository.findAll();
 		// .findAll() : 모든 데이터 조회(SELECT *)
 		assertEquals(2, all.size());
@@ -76,7 +82,7 @@ class SbBoardApplicationTests {
 		Question q = qList.get(0);
 		assertEquals("sbb가 무엇인가요?", q.getSubject());
 		
-		// 질문 데이터 수정
+		// 1-3. 질문 데이터 수정
 		Optional<Question> oq = this.questionRepository.findById(1);
 		// assertTrue() : 값이 true인지 테스트(false일 경우 오류 발생)
 		assertTrue(oq.isPresent());
@@ -84,7 +90,7 @@ class SbBoardApplicationTests {
 		q.setSubject("수정된 제목");
 		this.questionRepository.save(q);
 		
-		// 질문 데이터 삭제
+		// 1-4. 질문 데이터 삭제
 		assertEquals(2, this.questionRepository.count());
 		// 리포지터리의 .count() : 테이블 행의 개수 리턴
 		Optional<Question> oq = this.questionRepository.findById(1);
@@ -94,9 +100,32 @@ class SbBoardApplicationTests {
 		// 삭제한 후, 테이블 행 개수가 1인지 테스트
 		assertEquals(1, this.questionRepository.count());
 		
+		// 2-1. 답변 데이터 저장
+		Optional<Question> oq = this.questionRepository.findById(2);
+		assertTrue(oq.isPresent());
+		Question q = oq.get();
+		
+		Answer a = new Answer();
+		a.setContent("네 자동으로 생성됩니다.");
+		a.setQuestion(q);
+		a.setCreateDate(LocalDateTime.now());
+		this.answerRepository.save(a);
+		
+		// 2-2. 답변 데이터 조회
+		Optional<Answer> oa = this.answerRepository.findById(1);
+		assertTrue(oa.isPresent());
+		Answer a = oa.get();
+		assertEquals(2, a.getQuestion().getId());
 		*/
 		
-		// 답변 데이터 저장
+		// question -> answer 데이터 찾기
+		Optional<Question> oq = this.questionRepository.findById(2);
+		assertTrue(oq.isPresent());
+		Question q = oq.get();
+		
+		List<Answer> answerList = q.getAnswerList();
+		assertEquals(1, answerList.size());
+		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
 	}
 	
 	

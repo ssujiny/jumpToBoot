@@ -37,6 +37,10 @@ dependencies {
 	
 	//testRuntimeOnly: 테스트시에만 해당 라이브러리 사용
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	
+	// template engine
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 }
 
 tasks.named('test') {
