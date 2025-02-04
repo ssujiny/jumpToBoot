@@ -1,6 +1,7 @@
 package com.mysite.sbb.question;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mysite.sbb.answer.Answer;
@@ -8,6 +9,7 @@ import com.mysite.sbb.answer.Answer;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +37,7 @@ public class Question {
 	private LocalDateTime createDate;
 	
 	// 질문-답변은 1:N관계 / cascade = CascadeType.REMOVE : 질문 삭제시 답변 모두 삭제 설정
-	@OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
-	private List<Answer> answerList;
+	@OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+	private List<Answer> answerList = new ArrayList<>();
+	
 }

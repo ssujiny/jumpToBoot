@@ -1,0 +1,19 @@
+import org.springframework cannot be resolved
+패키지명을 rename하면서 발생한 에러1
+: gradle progect로 인식이 되지 않아서 발생
+configure -> add gradle nature 실행
+없다면 properties -> project natures -> gradle 제거하면 add gradle nature 생김
+
+because it's located directly under the workspace root. If such a project is renamed, Eclipse would move the container directory. 
+패키지명을 rename하면서 발생한 에러2
+: 프로젝트명과 settings.gradle의 rootProject.name의 명이 달라서 발생
+-> settings.gradle 파일에서 프로젝트 명 수정, gradle refresh (해결)
+
+@OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+private List<Answer> answerList = new ArrayList<>();
+이 값을 가져오려고 할 때, 
+org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.mysite.sbb.question.Question.answerList: could not initialize proxy - no Session 
+: Hibernate의 Lazy Loading 관련 문제로 발생, 주로 데이터베이스 세션이 닫힌 후에 연관된 컬렉션을 지연 로딩(Lazy Loading)하려 할 때 발생
+Lazy Loading은 기본적으로 연관된 데이터를 필요할 때만 로딩 => 처음에는 로딩되지 않고, 컬렉션에 접근하려 할 때 로딩
+하지만, 세션이 이미 닫힌 상태에서 지연 로딩을 하려고 하면, Hibernate는 더 이상 데이터베이스에 접근할 수 없기 때문에 LazyInitializationException 오류가 발생
+-> Eager Loading 사용 (fetch = FetchType.EAGER) 어노테이션 속성 추가
