@@ -1,14 +1,17 @@
+*
 import org.springframework cannot be resolved
 패키지명을 rename하면서 발생한 에러1
 : gradle progect로 인식이 되지 않아서 발생
 configure -> add gradle nature 실행
 없다면 properties -> project natures -> gradle 제거하면 add gradle nature 생김
 
+*
 because it's located directly under the workspace root. If such a project is renamed, Eclipse would move the container directory. 
 패키지명을 rename하면서 발생한 에러2
 : 프로젝트명과 settings.gradle의 rootProject.name의 명이 달라서 발생
 -> settings.gradle 파일에서 프로젝트 명 수정, gradle refresh (해결)
 
+*
 @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
 private List<Answer> answerList = new ArrayList<>();
 이 값을 가져오려고 할 때, 
@@ -17,3 +20,21 @@ org.hibernate.LazyInitializationException: failed to lazily initialize a collect
 Lazy Loading은 기본적으로 연관된 데이터를 필요할 때만 로딩 => 처음에는 로딩되지 않고, 컬렉션에 접근하려 할 때 로딩
 하지만, 세션이 이미 닫힌 상태에서 지연 로딩을 하려고 하면, Hibernate는 더 이상 데이터베이스에 접근할 수 없기 때문에 LazyInitializationException 오류가 발생
 -> Eager Loading 사용 (fetch = FetchType.EAGER) 어노테이션 속성 추가
+
+*
+There was an unexpected error (type=Internal Server Error, status=500).
+No message available
+java.lang.StackOverflowError
+	at java.base/java.lang.StringLatin1.indexOf(StringLatin1.java:235)
+	at java.base/java.lang.String.indexOf(String.java:2505)
+	at java.base/java.lang.String.contains(String.java:2851)
+	at org.springframework.util.ClassUtils.getUserClass(ClassUtils.java:999)
+	at org.springframework.core.BridgeMethodResolver.resolveBridgeMethod(BridgeMethodResolver.java:106)
+	at org.springframework.core.BridgeMethodResolver.findBridgedMethod(BridgeMethodResolver.java:71)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:352)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:216)
+	at jdk.proxy4/jdk.proxy4.$Proxy131.authenticate(Unknown Source)
+	at jdk.internal.reflect.GeneratedMethodAccessor27.invoke(Unknown Source)
+
+: authenticate 메소드 관련해서 에러 발생
+-> UserSecurityService implements UserDetailsService 클래스에서 @Service 등록 안해서 발생...	

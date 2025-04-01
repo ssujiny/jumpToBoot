@@ -1,6 +1,7 @@
 package com.mysite.sbb;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.answer.AnswerRepository;
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionRepository;
+import com.mysite.sbb.question.QuestionService;
 
 // 스프링부트 테스트 클래스 의미
 @SpringBootTest
@@ -24,13 +26,17 @@ class SbBoardApplicationTests {
 	/*	객체 주입 방식
 	 * 1. @Autowired 이용
 	 * 2. Setter 메서드/생성자 이용 (권장)
-	 */
+	 
 	
 	@Autowired
 	private QuestionRepository questionRepository;
 	
 	@Autowired
 	private AnswerRepository answerRepository;
+	
+	*/
+	@Autowired
+	private QuestionService questionService;
 
 	// 테스트 메서드 의미, SbbApplicationTests클래스 - JUnit 실행 -> @Test 붙은 메서드 실행 
 	@Test
@@ -116,7 +122,7 @@ class SbBoardApplicationTests {
 		assertTrue(oa.isPresent());
 		Answer a = oa.get();
 		assertEquals(2, a.getQuestion().getId());
-		*/
+		
 		
 		// question -> answer 데이터 찾기
 		Optional<Question> oq = this.questionRepository.findById(2);
@@ -126,6 +132,15 @@ class SbBoardApplicationTests {
 		List<Answer> answerList = q.getAnswerList();
 		assertEquals(1, answerList.size());
 		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
+		
+		*/
+		
+		// 테스트용 글 300개 등록
+		for(int i=1; i<=300; i++) {
+			String subject = String.format("테스트 데이터입니다:[%03d]", i);
+			String content = "내용 없음";
+			this.questionService.create(subject, content, null);
+		}
 	}
 	
 	
