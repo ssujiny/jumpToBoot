@@ -1,10 +1,13 @@
 package com.mysite.sbb.question;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface QuestionRepository extends JpaRepository<Question, Integer>{
 	// findBySubject() 메서드는 기본 제공 X -> 인터페이스에 추가 필요
@@ -19,5 +22,9 @@ public interface QuestionRepository extends JpaRepository<Question, Integer>{
 	
 	// 페이징 기능 추가
 	Page<Question> findAll(Pageable pageable);
+	
+	// lazy loading 개선
+	@Query("SELECT q FROM Question q LEFT JOIN FETCH q.voter WHERE q.id = :id")
+	Optional<Question> findByIdWithVoter(@Param("id") Integer id);
 	
 }

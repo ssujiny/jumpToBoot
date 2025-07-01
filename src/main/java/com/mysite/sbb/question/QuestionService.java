@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.user.SiteUser;
@@ -38,10 +39,12 @@ public class QuestionService {
 		return this.questionRepository.findAll(pageable);
 	}
 	
+	@Transactional(readOnly = true)
 	public Question getQuestion(Integer id) {
 		Optional<Question> question = this.questionRepository.findById(id);
 		
 		if(question.isPresent()) {
+			questionRepository.findByIdWithVoter(id).orElse(null);
 			return question.get();
 		} else {
 			throw new DataNotFoundException("question not found");
@@ -68,4 +71,9 @@ public class QuestionService {
 		this.questionRepository.delete(question);
 	}
 	
+	
+	public void vote(Question question, SiteUser siteUser) {
+		question.getVoter().add(siteUser);
+		this.questionRepository.save(question);
+	}
 }
