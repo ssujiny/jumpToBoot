@@ -32,15 +32,16 @@ public class QuestionController {
 	private final UserService userService;
 	
 	@GetMapping("/list")
-	public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+	public String list(Model model, @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="searchWord", defaultValue="") String searchWord) {
 		// 스프링부트의 페이징기능 구현시, 첫 페이지 번호는 0이다. -> 기본값 0으로 설정
 		
 		//List<Question> questionList = this.questionService.getList();
 		//model.addAttribute("questionList", questionList);
 		
 		// 페이징 기능 추가
-		Page<Question> paging = this.questionService.getList(page);
+		Page<Question> paging = this.questionService.getList(page, searchWord);
 		model.addAttribute("paging", paging);
+		model.addAttribute("searchWord", searchWord);
 		
 		return "question_list";
 	}
