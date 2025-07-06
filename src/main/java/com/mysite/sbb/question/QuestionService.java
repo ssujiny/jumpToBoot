@@ -65,9 +65,12 @@ public class QuestionService {
 		List<Sort.Order> sorts = new ArrayList<>();
 		sorts.add(Sort.Order.desc("createDate"));
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-		Specification<Question> spec = search(searchWord);
 		
-		return this.questionRepository.findAll(spec, pageable);
+		// Specification 사용 버전
+		//Specification<Question> spec = search(searchWord);
+		//return this.questionRepository.findAll(spec, pageable);
+		
+		return this.questionRepository.findAllByKeyword(searchWord, pageable);
 	}
 	
 	@Transactional(readOnly = true)

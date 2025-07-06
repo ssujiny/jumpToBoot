@@ -30,4 +30,19 @@ public interface QuestionRepository extends JpaRepository<Question, Integer>{
 	
 	Page<Question> findAll(Specification<Question> spec, Pageable pageable);
 	
+	// @Query: 반드시 테이블 아닌 엔티티 기준으로 작성
+	@Query("select "
+			+ "distinct q "
+			+ "from Question q "
+			+ "left outer join SiteUser u1 on q.author = u1 "
+			+ "left outer join Answer a on a.question = q "
+			+ "left outer join SiteUser u2 on a.author = u2 "
+			+ "where "
+			+ " q.subject like %:searchWord% "
+			+ " OR q.content like %:searchWord% "
+			+ " OR u1.username like %:searchWord% "
+			+ " OR a.content like %:searchWord% "
+			+ " OR u2.username like %:searchWord% ")
+	Page<Question> findAllByKeyword(@Param("searchWord") String searchWord, Pageable pageable);
+	
 }
